@@ -26,11 +26,8 @@ with mp_hands.Hands(
         if not ret:
             break
 
-        # BGR to RGB
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        
-        results = hands.process(rgb_frame)
-        
+        results = hands.process(frame)  # Não é necessário converter para RGB
+
         if results.multi_hand_landmarks:
             for hand_landmarks in results.multi_hand_landmarks:
                 
@@ -70,9 +67,7 @@ with mp_hands.Hands(
 
                             # Crop and save the hand image with a white background
                             hand_image = frame[y_min:y_max, x_min:x_max]
-                            white_background = Image.new('RGB', (hand_image.shape[1], hand_image.shape[0]), (255, 255, 255))
-                            white_background.paste(Image.fromarray(hand_image), (0, 0))
-                            white_background.save(f'imagens/hand_{int(current_time)}.png')
+                            cv2.imwrite(f'imagens/hand_{int(current_time)}.png', hand_image)
                 
                 prev_landmarks = landmarks
 
